@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WhoAmILol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Google+Sans+Display:wght@400;500&family=Roboto:wght@400;500&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.5/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --radius: 15px;
+  --bg: #000000;
+  --surface: #1e1e1e;
+  --surface-high: #2b2b2b;
+  --outline: #3a3a3a;
+  --border: rgba(255, 255, 255, 0.09);
+  --text: #f0f0f0;
+  --text-secondary: #adadad;
+  --text-tertiary: #757575;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+}
+
+.page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 48px 32px 120px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  padding-bottom: 32px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.avatar-wrap {
+  flex-shrink: 0;
+  width: 140px;
+  height: 140px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.identity {
+  flex: 1;
+  min-width: 0;
+  padding-top: 6px;
+}
+
+.identity-name {
+  font-family: 'Google Sans Display', 'Google Sans', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+.bio {
+  max-width: 620px;
+}
+
+.bio > *:first-child {
+  margin-top: 0;
+}
+
+.bio > *:last-child {
+  margin-bottom: 0;
+}
+
+.section-label {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0 4px 12px;
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.post-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.post-inner {
+  padding: 24px 26px;
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.post-dot {
+  width: 3px;
+  height: 3px;
+  background: var(--text-tertiary);
+}
+
+.post-body h1, .post-body h2, .post-body h3, .post-body h4, .post-body h5, .post-body h6,
+.bio h1, .bio h2, .bio h3, .bio h4, .bio h5, .bio h6 {
+  font-family: 'Google Sans', sans-serif;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+  margin: 20px 0 10px;
+}
+
+.post-body h1:first-child, .post-body h2:first-child, .post-body h3:first-child,
+.bio h1:first-child, .bio h2:first-child, .bio h3:first-child {
+  margin-top: 0;
+}
+
+.post-body h1, .bio h1 { font-size: 20px; }
+.post-body h2, .bio h2 { font-size: 17px; }
+.post-body h3, .bio h3 { font-size: 15px; }
+.post-body h4, .post-body h5, .post-body h6,
+.bio h4, .bio h5, .bio h6 { font-size: 14px; color: var(--text-secondary); }
+
+.post-body p, .bio p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin: 0 0 14px;
+}
+
+.post-body a, .bio a {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+.post-body strong, .bio strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.post-body ul, .post-body ol, .bio ul, .bio ol {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.75;
+  padding-left: 22px;
+  margin: 0 0 14px;
+}
+
+.post-body li, .bio li {
+  margin-bottom: 4px;
+}
+
+.post-body blockquote, .bio blockquote {
+  margin: 0 0 14px;
+  padding: 2px 16px;
+  border-left: 2px solid var(--outline);
+  color: var(--text-tertiary);
+}
+
+.post-body img, .bio img {
+  max-width: 100%;
+  border-radius: var(--radius);
+  display: block;
+  margin: 14px 0;
+}
+
+.post-body hr, .bio hr {
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 22px 0;
+}
+
+.post-body pre, .bio pre {
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  overflow-x: auto;
+  margin: 0 0 14px;
+  background: var(--surface-high) !important;
+}
+
+.post-body code, .bio code {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+}
+
+.post-body :not(pre) > code, .bio :not(pre) > code {
+  background: var(--surface-high);
+  border-radius: 6px;
+  padding: 1px 6px;
+  color: var(--text);
+}
+
+.post-body table, .bio table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 14px;
+  font-size: 13px;
+}
+
+.post-body th, .post-body td, .bio th, .bio td {
+  border: 1px solid var(--outline);
+  padding: 8px 12px;
+  text-align: left;
+  color: var(--text-secondary);
+}
+
+.post-body th, .bio th {
+  color: var(--text);
+  font-family: 'Google Sans', sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--surface-high);
+}
+
+.post-body input[type="checkbox"], .bio input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+.post-placeholder {
+  height: var(--placeholder-height, 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-block {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--surface-high);
+}
+
+.empty-state, .error-state {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text-tertiary);
+  padding: 32px 4px;
+}
+
+@media (max-width: 560px) {
+  .profile-header {
+    flex-direction: column;
+  }
+  .avatar-wrap {
+    width: 96px;
+    height: 96px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="profile-header">
+    <div class="avatar-wrap">
+      <img class="avatar" id="avatar" alt="AvaLilac" />
+    </div>
+    <div class="identity">
+      <p class="identity-name">AvaLilac</p>
+      <div class="bio" id="bio">
+        <p>Loading bio…</p>
+      </div>
+    </div>
+  </header>
+
+  <p class="section-label">Posts</p>
+  <main class="posts" id="posts"></main>
+</div>
+
+<script>
+const GITHUB_USERNAME = "AvaLilac";
+const REPO_OWNER = "AvaLilac";
+const REPO_NAME = "about-me";
+const REPO_BRANCH = "main";
+const CONTENT_PATH = "content";
+const BIO_PATH = "bio/bio.md";
+
+marked.setOptions({
+  gfm: true,
+  breaks: false,
+  headerIds: false,
+  mangle: false,
+  highlight: function (code, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      return hljs.highlight(code, { language: lang }).value;
+    }
+    return hljs.highlightAuto(code).value;
+  }
+});
+
+function renderMarkdown(raw) {
+  const dirty = marked.parse(raw);
+  return DOMPurify.sanitize(dirty);
+}
+
+async function loadAvatar() {
+  const avatarEl = document.getElementById("avatar");
+  try {
+    const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+    if (!res.ok) throw new Error("avatar fetch failed");
+    const data = await res.json();
+    avatarEl.src = data.avatar_url;
+  } catch (err) {
+    avatarEl.src = `https://github.com/${GITHUB_USERNAME}.png`;
+  }
+}
+
+async function loadBio() {
+  const bioEl = document.getElementById("bio");
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${BIO_PATH}?ref=${REPO_BRANCH}`,
+      { headers: { Accept: "application/vnd.github+json" } }
+    );
+    if (!res.ok) throw new Error("bio fetch failed");
+    const data = await res.json();
+    const raw = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ""))));
+    bioEl.innerHTML = renderMarkdown(raw);
+  } catch (err) {
+    bioEl.innerHTML = "<p>Bio unavailable right now.</p>";
+  }
+}
+
+async function fetchJSON(url) {
+  const res = await fetch(url, {
+    headers: { Accept: "application/vnd.github+json" }
+  });
+  if (!res.ok) throw new Error(`request failed: ${url}`);
+  return res.json();
+}
+
+async function getCreatedDate(path) {
+  try {
+    const commits = await fetchJSON(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?path=${encodeURIComponent(path)}&per_page=100`
+    );
+    if (!commits.length) return new Date(0);
+    const oldest = commits[commits.length - 1];
+    return new Date(oldest.commit.author.date);
+  } catch (err) {
+    return new Date(0);
+  }
+}
+
+function formatDate(date) {
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  });
+}
+
+function titleFromFilename(filename) {
+  const base = filename.replace(/\.md$/i, "");
+  return base.replace(/[-_]+/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function buildPostCard(post) {
+  const card = document.createElement("article");
+  card.className = "post-card";
+  card.dataset.path = post.path;
+  card.innerHTML = `<div class="post-placeholder"><div class="placeholder-block"></div></div>`;
+  return card;
+}
+
+function buildPostContent(post, rawMarkdown) {
+  const wrap = document.createElement("div");
+  wrap.className = "post-inner";
+  const html = renderMarkdown(rawMarkdown);
+  wrap.innerHTML = `
+    <div class="post-meta">
+      <span>${post.title}</span>
+      <span class="post-dot"></span>
+      <span>${formatDate(post.date)}</span>
+    </div>
+    <div class="post-body">${html}</div>
+  `;
+  return wrap;
+}
+
+function setupLazyLoading(container, posts) {
+  const cache = new Map();
+
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(async entry => {
+        const card = entry.target;
+        const path = card.dataset.path;
+        const post = posts.find(p => p.path === path);
+
+        if (entry.isIntersecting) {
+          if (cache.has(path)) {
+            card.innerHTML = "";
+            card.appendChild(cache.get(path).cloneNode(true));
+            return;
+          }
+          try {
+            const res = await fetch(post.download_url);
+            const raw = await res.text();
+            const contentEl = buildPostContent(post, raw);
+            cache.set(path, contentEl.cloneNode(true));
+            if (card.dataset.path === path) {
+              card.innerHTML = "";
+              card.appendChild(contentEl);
+              card.style.setProperty("--placeholder-height", card.offsetHeight + "px");
+            }
+          } catch (err) {
+            card.innerHTML = `<div class="error-state">Couldn't load this post.</div>`;
+          }
+        } else {
+          const height = card.offsetHeight;
+          card.style.setProperty("--placeholder-height", height + "px");
+          card.innerHTML = `<div class="post-placeholder"><div class="placeholder-block"></div></div>`;
+        }
+      });
+    },
+    { root: null, rootMargin: "200px 0px", threshold: 0 }
+  );
+
+  posts.forEach(post => {
+    const card = buildPostCard(post);
+    container.appendChild(card);
+    observer.observe(card);
+  });
+}
+
+async function loadPosts() {
+  const container = document.getElementById("posts");
+  try {
+    const files = await fetchJSON(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CONTENT_PATH}?ref=${REPO_BRANCH}`
+    );
+    const mdFiles = files.filter(f => f.type === "file" && f.name.toLowerCase().endsWith(".md"));
+
+    if (!mdFiles.length) {
+      container.innerHTML = `<div class="empty-state">No posts yet.</div>`;
+      return;
+    }
+
+    const posts = await Promise.all(
+      mdFiles.map(async f => ({
+        path: f.path,
+        download_url: f.download_url,
+        title: titleFromFilename(f.name),
+        date: await getCreatedDate(f.path)
+      }))
+    );
+
+    posts.sort((a, b) => b.date - a.date);
+    setupLazyLoading(container, posts);
+  } catch (err) {
+    container.innerHTML = `<div class="error-state">Couldn't load posts right now.</div>`;
+  }
+}
+
+loadAvatar();
+loadBio();
+loadPosts();
+</script>
+</body>
+</html>
