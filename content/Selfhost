@@ -15,5 +15,5 @@ A Easy To Use Selfhost GUI. Including the setup, which helps you add what name y
 
 Not unless you are willing to deal with a unstable API, Having to code your own discovery/admin panel. I would not selfhost stoatchat. It was hell during the time i was selfhosting it. Their own script overwrote my secrets. and i was told it was my fault for having a custom install. The issue is. I didnt. It was unmodified. I didnt code anything into it. And i also found the exact bug
 that caused my secrets to be overwrote. Inside their script. proving that it was not me. So no. Dont use stoat as a selfhost. I would selfhost fluxer. Anyway. This has been Ava, Signing off this blogpost
-
+Sorry about the rant again. this is just my thoughts
 - Ava
